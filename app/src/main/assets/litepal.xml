@@ -1,9 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
 <litepal>
-    <dbname value="xiaan_weather"/>
-    <version value="1.0"/>
+
+    <dbname value="cool_weather" />
+
+    <version value="1" />
+
     <list>
-        <mapping Class="com.xiaanweather.android.db.Province"/>
-        <mapping Class="com.xiaanweather.android.db.City"/>
-        <mapping Class="com.xiaanweather.android.db.County"/>
+        <mapping class="com.xiaanweather.android.db.Province" />
+        <mapping class="com.xiaanweather.android.db.City" />
+        <mapping class="com.xiaanweather.android.db.County" />
     </list>
+
 </litepal>
