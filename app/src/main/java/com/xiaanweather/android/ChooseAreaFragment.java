@@ -1,6 +1,7 @@
 package com.xiaanweather.android;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -12,7 +13,6 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.xiaanweather.android.db.City;
 import com.xiaanweather.android.db.County;
 import com.xiaanweather.android.db.Province;
@@ -28,13 +28,6 @@ import java.util.List;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
-
-/**
- * Description:
- * Copyright  : Copyright (c) 2016
- * Author     : yangfang
- * Date       : 2017/2/28 23:52
- */
 
 public class ChooseAreaFragment extends Fragment {
 
@@ -93,9 +86,9 @@ public class ChooseAreaFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.choose_area, container, false);
-        titleText = (TextView) view.findViewById(R.id.tv_title);
-        backButton = (Button) view.findViewById(R.id.btn_back);
-        listView = (ListView) view.findViewById(R.id.lv_listview);
+        titleText = (TextView) view.findViewById(R.id.title_text);
+        backButton = (Button) view.findViewById(R.id.back_button);
+        listView = (ListView) view.findViewById(R.id.list_view);
         adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, dataList);
         listView.setAdapter(adapter);
         return view;
@@ -113,6 +106,19 @@ public class ChooseAreaFragment extends Fragment {
                 } else if (currentLevel == LEVEL_CITY) {
                     selectedCity = cityList.get(position);
                     queryCounties();
+                } else if (currentLevel == LEVEL_COUNTY) {
+                    String weatherId = countyList.get(position).getWeatherId();
+                    if (getActivity() instanceof MainActivity) {
+                        Intent intent = new Intent(getActivity(), WeatherActivity.class);
+                        intent.putExtra("weather_id", weatherId);
+                        startActivity(intent);
+                        getActivity().finish();
+                    } else if (getActivity() instanceof WeatherActivity) {
+                        WeatherActivity activity = (WeatherActivity) getActivity();
+                        activity.drawerLayout.closeDrawers();
+                        activity.swipeRefresh.setRefreshing(true);
+                        activity.requestWeather(weatherId);
+                    }
                 }
             }
         });
@@ -204,7 +210,7 @@ public class ChooseAreaFragment extends Fragment {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String responseText = response.body().string();
-                boolean result = false;
+                    boolean result = false;
                 if ("province".equals(type)) {
                     result = Utility.handleProvinceResponse(responseText);
                 } else if ("city".equals(type)) {

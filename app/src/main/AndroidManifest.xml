@@ -17,6 +17,12 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name="com.xiaanweather.android.WeatherActivity" />
+        <service
+            android:name=".service.AutoUpdateService"
+            android:enabled="true"
+            android:exported="true" />
+
     </application>
 
 </manifest>
